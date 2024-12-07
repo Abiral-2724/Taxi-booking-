@@ -457,4 +457,129 @@ Authorization: Bearer <your-token>
 - The `/logout` endpoint ensures the token is blacklisted, preventing future use.
 ``` 
 
+## **Captain Routes
 
+```markdown
+# API Documentation
+
+## `/captains/register`
+### Method: `POST`
+### Description:
+This endpoint allows you to register a new captain. It requires the captain's details, including personal information and vehicle details. The captain's password is hashed before being stored in the database.
+
+### Request Body:
+The request body should be a JSON object containing the following fields:
+
+- **fullname**: Object containing:
+  - `firstname` (string): The first name of the captain. Must be at least 3 characters long.
+  - `lastname` (string): The last name of the captain. Must be at least 3 characters long.
+
+- **email** (string): The captain's email address. Must be a valid email format.
+
+- **password** (string): The captain's password. Must be at least 6 characters long.
+
+- **vehicle**: Object containing:
+  - `color` (string): The color of the captain's vehicle. Must be at least 3 characters long.
+  - `plate` (string): The vehicle's registration plate number. Must be at least 3 characters long.
+  - `capacity` (number): The capacity of the vehicle. Must be at least 1.
+  - `vehicleType` (string): The type of vehicle. Must be one of the following values: `'car'`, `'motorcycle'`, `'auto'`.
+
+### Example Request:
+```json
+{
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "john.doe@example.com",
+  "password": "password123",
+  "vehicle": {
+    "color": "red",
+    "plate": "ABC123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+### Response:
+- **Status Code**: `201 Created`
+- **Body**:
+  ```json
+  {
+    "token": "jwt-token",
+    "captain": {
+      "_id": "captain-id",
+      "fullname": {
+        "firstname": "John",
+        "lastname": "Doe"
+      },
+      "email": "john.doe@example.com",
+      "vehicle": {
+        "color": "red",
+        "plate": "ABC123",
+        "capacity": 4,
+        "vehicleType": "car"
+      },
+      "status": "inactive",
+      "createdAt": "2024-12-07T00:00:00.000Z",
+      "updatedAt": "2024-12-07T00:00:00.000Z"
+    }
+  }
+  ```
+
+### Status Codes:
+- `201 Created`: Successfully registered the captain.
+- `400 Bad Request`: Validation failed or missing required fields.
+- `400 Bad Request`: A captain already exists with the provided email.
+
+### Example Request:
+```http
+POST /captains/register
+Content-Type: application/json
+```
+
+### Example Response:
+```json
+{
+  "token": "jwt-token",
+  "captain": {
+    "_id": "captain-id",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "vehicle": {
+      "color": "red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "status": "inactive",
+    "createdAt": "2024-12-07T00:00:00.000Z",
+    "updatedAt": "2024-12-07T00:00:00.000Z"
+  }
+}
+```
+
+---
+
+## How Data is Required:
+
+- **fullname**: Object containing `firstname` and `lastname` (both must be strings with a minimum length of 3 characters).
+- **email**: A valid email address (string).
+- **password**: A string with a minimum length of 6 characters.
+- **vehicle**: Object containing:
+  - `color`: String, at least 3 characters long.
+  - `plate`: String, at least 3 characters long.
+  - `capacity`: Integer, at least 1.
+  - `vehicleType`: String, must be one of `['car', 'motorcycle', 'auto']`.
+
+---
+
+### Notes:
+- The password will be hashed before storing it in the database.
+- If a captain already exists with the provided email, the request will return a `400` error with the message `Captain already exists`.
+- The `status` of a new captain is set to `inactive` by default, and the generated JWT token is included in the response.
+``` 

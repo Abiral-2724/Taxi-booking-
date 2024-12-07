@@ -5,7 +5,7 @@ const express = require('express');
 const cors = require('cors');
 const connectToDb = require('./db/db.js');
 const userRoutes = require('./routes/user.routes.js');
-
+const captainRoutes = require('./routes/captain.routes.js')
 const app = express();
 const cookieParser = require('cookie-parser') ; 
 // Database connection
@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 
 // User Routes
 app.use('/users', userRoutes);
-
+app.use('/captains' ,captainRoutes)
 // Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err.message); // Log the error for debugging
