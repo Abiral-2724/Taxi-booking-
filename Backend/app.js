@@ -7,7 +7,7 @@ const connectToDb = require('./db/db.js');
 const userRoutes = require('./routes/user.routes.js');
 
 const app = express();
-
+const cookieParser = require('cookie-parser') ; 
 // Database connection
 connectToDb();
 
@@ -15,7 +15,7 @@ connectToDb();
 app.use(cors()); // Enable CORS
 app.use(express.json()); // For parsing JSON bodies
 app.use(express.urlencoded({ extended: true })); // For parsing URL-encoded data
-
+app.use(cookieParser()) ;
 // Root Route
 app.get('/', (req, res) => {
   res.send('Hello World');

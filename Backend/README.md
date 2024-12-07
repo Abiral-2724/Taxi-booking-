@@ -371,3 +371,90 @@ Send a POST request to /users/login with the required email and password fields 
 Handle validation errors if the input is incorrect.
 If the login is successful, the server will return a JWT token and user details.
 If the credentials are invalid, an error message will be returned
+
+
+## **logout And Profile** 
+Here is a `README.md` file documentation for the `/users/profile` and `/users/logout` endpoints:
+
+```markdown
+# API Documentation
+
+## `/users/profile`
+### Method: `GET`
+### Description:
+This endpoint retrieves the profile of the authenticated user. It requires a valid authentication token passed in the request headers or cookies.
+
+### Request Headers:
+- `Authorization`: Bearer token (or the token is passed via `cookies`).
+
+### Response:
+- **Status Code**: `200 OK`
+- **Body**:
+  ```json
+  {
+    "user": {
+      "_id": "userId",
+      "firstname": "John",
+      "lastname": "Doe",
+      "email": "john.doe@example.com",
+      "createdAt": "2024-12-07T00:00:00.000Z",
+      "updatedAt": "2024-12-07T00:00:00.000Z"
+    }
+  }
+  ```
+
+### Status Codes:
+- `200 OK`: Successfully retrieved the user profile.
+- `401 Unauthorized`: Invalid or missing token.
+
+### Example Request:
+```http
+GET /users/profile
+Authorization: Bearer <your-token>
+```
+
+## `/users/logout`
+### Method: `GET`
+### Description:
+This endpoint logs the user out by clearing the authentication token from cookies and adding it to the blacklist to prevent reuse.
+
+### Request Headers:
+- `Authorization`: Bearer token (or the token is passed via `cookies`).
+
+### Response:
+- **Status Code**: `200 OK`
+- **Body**:
+  ```json
+  {
+    "message": "Logged out successfully"
+  }
+  ```
+
+### Status Codes:
+- `200 OK`: Successfully logged out.
+- `401 Unauthorized`: Invalid or missing token.
+
+### Example Request:
+```http
+GET /users/logout
+Authorization: Bearer <your-token>
+```
+
+---
+
+## How Data is Required:
+
+### `GET /users/profile`
+- **Authorization Token**: A valid JWT token is required to access the user's profile. The token should be passed either in the `Authorization` header (with Bearer) or as a `cookie`.
+
+### `GET /users/logout`
+- **Authorization Token**: A valid JWT token is required to log out. The token should be passed either in the `Authorization` header (with Bearer) or as a `cookie`.
+
+---
+
+### Notes:
+- For both endpoints, the JWT token is necessary for authentication. If the token is invalid, expired, or not provided, the request will be denied with a `401 Unauthorized` status.
+- The `/logout` endpoint ensures the token is blacklisted, preventing future use.
+``` 
+
+
