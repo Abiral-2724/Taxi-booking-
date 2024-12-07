@@ -583,3 +583,125 @@ Content-Type: application/json
 - If a captain already exists with the provided email, the request will return a `400` error with the message `Captain already exists`.
 - The `status` of a new captain is set to `inactive` by default, and the generated JWT token is included in the response.
 ``` 
+
+# Captain API Documentation
+
+This document provides detailed information about the `/captains` API endpoints, including the `/login`, `/logout`, and `/profile` routes.
+
+## Endpoint: `/captains/login`
+
+### Description:
+The `/captains/login` endpoint is used to authenticate a captain and generate an authentication token.
+
+### HTTP Method:
+`POST`
+
+### Request Body:
+- `email`: (String) Captain's registered email address (Required).
+- `password`: (String) Captain's password (Required).
+
+### Validation:
+- `email`: Must be a valid email address.
+- `password`: Must be at least 6 characters long.
+
+### Response:
+- **Status Code 200 (OK)**: If the login is successful, the server will respond with a token and captain details.
+    ```json
+    {
+      "token": "auth_token",
+      "captain": {
+        "firstname": "John",
+        "lastname": "Doe",
+        "email": "john.doe@example.com",
+        "vehicle": {
+          "color": "Red",
+          "plate": "XYZ123",
+          "capacity": 4,
+          "vehicleType": "car"
+        }
+      }
+    }
+    ```
+
+- **Status Code 400 (Bad Request)**: If the request body is missing required fields or contains invalid data.
+    ```json
+    {
+      "errors": [
+        { "msg": "Invalid Email", "param": "email" },
+        { "msg": "Password must be at least 6 characters long", "param": "password" }
+      ]
+    }
+    ```
+
+- **Status Code 401 (Unauthorized)**: If the login credentials are incorrect (e.g., wrong email or password).
+    ```json
+    {
+      "message": "Invalid email or password"
+    }
+    ```
+
+---
+
+## Endpoint: `/captains/logout`
+
+### Description:
+The `/captains/logout` endpoint is used to log out a captain by invalidating their authentication token.
+
+### HTTP Method:
+`GET`
+
+### Request Headers:
+- `Authorization`: (String) Bearer token (Required).
+
+### Response:
+- **Status Code 200 (OK)**: If the logout is successful.
+    ```json
+    {
+      "message": "Logout successfully"
+    }
+    ```
+
+---
+
+## Endpoint: `/captains/profile`
+
+### Description:
+The `/captains/profile` endpoint retrieves the profile information of the currently authenticated captain.
+
+### HTTP Method:
+`GET`
+
+### Request Headers:
+- `Authorization`: (String) Bearer token (Required).
+
+### Response:
+- **Status Code 200 (OK)**: If the request is successful, the server responds with the captain's profile information.
+    ```json
+    {
+      "captain": {
+        "firstname": "John",
+        "lastname": "Doe",
+        "email": "john.doe@example.com",
+        "vehicle": {
+          "color": "Red",
+          "plate": "XYZ123",
+          "capacity": 4,
+          "vehicleType": "car"
+        }
+      }
+    }
+    ```
+
+- **Status Code 401 (Unauthorized)**: If the captain is not authenticated (i.e., no valid token is provided).
+    ```json
+    {
+      "message": "Unauthorized"
+    }
+    ```
+
+---
+
+## General Notes:
+- All endpoints are protected by authentication via JWT tokens.
+- The `/captains/logout` route will blacklist the token to ensure it is invalidated.
+- The `/captains/profile` route is only accessible to authenticated users (captains) who provide a valid JWT token.
