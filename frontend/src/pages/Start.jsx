@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 
 const Start = () => {
   // Images for the slider
@@ -36,7 +36,7 @@ const Start = () => {
   };
 
   return (
-    <div className="relative h-screen overflow-hidden">
+    <div className="relative h-screen overflow-hidden cursor-move">
       {/* Background Image Slider */}
       <div 
         className="absolute inset-0 bg-cover bg-center transition-transform duration-500 ease-in-out"
@@ -89,7 +89,7 @@ const Start = () => {
           to='/login' 
           className='flex items-center justify-center w-full bg-black text-white py-3 rounded mt-5 hover:bg-gray-800 transition'
         >
-          Continue
+          <span className='text-lg'>Continue</span> <span className='ml-1'><ArrowRight /></span>
         </Link>
       </div>
     </div>

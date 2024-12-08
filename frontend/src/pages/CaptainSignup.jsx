@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 import { CaptainDataContext } from '../context/CapatainContext';
 import axios from 'axios';
 
 const CaptainSignup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
 
@@ -17,37 +19,37 @@ const CaptainSignup = () => {
   const { captain, setCaptain } = React.useContext(CaptainDataContext);
 
   const [userData, setUserData] = useState({});
- const navigate = useNavigate() ; 
+  const navigate = useNavigate();
+
   const submitHandler = async (e) => {
     e.preventDefault();
 
     const captainData = {
-        fullname: {
-            firstname: firstName,
-            lastname: lastName
-          },
-          email: email,
-          password: password,
-          vehicle: {
-            color: vehicleColor,
-            plate: vehiclePlate,
-            capacity: vehicleCapacity,
-            vehicleType: vehicleType
-          }
-    
+      fullname: {
+        firstname: firstName,
+        lastname: lastName,
+      },
+      email: email,
+      password: password,
+      vehicle: {
+        color: vehicleColor,
+        plate: vehiclePlate,
+        capacity: vehicleCapacity,
+        vehicleType: vehicleType,
+      },
     };
-    console.log(captainData);
 
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/captains/register`,
+      captainData
+    );
 
-
-const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register` ,captainData)
-
- if(response.status === 201){
-    const data  = response.data 
-    setCaptain(data.captain) ;
-    localStorage.setItem('token' ,data.token) ;
-    navigate('/captain-home')
- }
+    if (response.status === 201) {
+      const data = response.data;
+      setCaptain(data.captain);
+      localStorage.setItem('token', data.token);
+      navigate('/captain-home');
+    }
 
     setEmail('');
     setPassword('');
@@ -107,17 +109,25 @@ const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/reg
           />
 
           <h3 className='text-base font-medium mb-2'>Enter your Password</h3>
+          <div className='relative mb-3'>
+            <input
+              className='bg-[#eeeeee] rounded-md px-4 py-2 border w-full text-lg placeholder:text-base pr-10'
+              required
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+              type={showPassword ? 'text' : 'password'} // Toggle type
+              placeholder='Enter Password'
+            />
+            <div
+              className='absolute top-2.5 right-3 cursor-pointer text-gray-500'
+              onClick={() => setShowPassword(!showPassword)} // Toggle visibility
+            >
+              {showPassword ? <EyeOff size={20} className='mt-1'/> : <Eye size={20} className='mt-1'/>}
+            </div>
+          </div>
 
-          <input
-            className='bg-[#eeeeee] mb-3 rounded-md px-4 py-2 border w-full text-lg placeholder:text-base'
-            required
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-            type='password'
-            placeholder='Enter Password'
-          />
           <h3 className='text-lg font-medium mb-2'>Vehicle Information</h3>
           <div className='flex gap-4 mb-7'>
             <select
@@ -158,7 +168,7 @@ const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/reg
               }}
             >
               <option value='' disabled>
-                 Capacity
+                Capacity
               </option>
               <option value='4'>4</option>
               <option value='6'>6</option>
